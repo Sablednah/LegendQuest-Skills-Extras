@@ -1,0 +1,13 @@
+name: LQSkillsExtras
+version: 1.5.0
+description: |
+    Extra Skills plug for LegendQuest RPG plugin for MineCraft servers using the Bukkit API
+    Adds extra skills.
+author: SableDnah
+website: http://dev.bukkit.org/server-mods/legendquest/
+
+main: me.sablednah.legendquest.DeploySkills
+depend: [ ]
+softdepend: [  ]
+
+        
