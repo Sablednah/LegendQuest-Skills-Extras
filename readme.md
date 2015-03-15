@@ -1,9 +1,9 @@
 ![LegendQuest](http://dev.bukkit.org/media/images/73/534/legend-quest-logo.png)
 
-LegendQuest Skills
+LegendQuest Extra Skills
 ==================
 
-LegendQuest Skills is a set of default skills for use with LegendQuest.
+LegendQuest Extra Skills is a set of extra skills for use with LegendQuest.  These skills are more niche usage, and are shipped as separated jars so you can pick and choose the ones you want to use :)
 
 LegendQuest is a RPG plugin for MineCraft servers using the Bukkit API.
 
