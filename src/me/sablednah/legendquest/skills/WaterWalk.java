@@ -17,7 +17,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 
 // set skill defaults
-@SkillManifest(name = "WaterWalk", type = SkillType.PASSIVE, author = "SableDnah", version = 1.1D, 
+@SkillManifest(name = "WaterWalk", type = SkillType.PASSIVE, author = "SableDnah", version = 1.2D, 
 	description = "Walk on [material], turning it to [newmaterial].", 
 	consumes = "", manaCost = 0, levelRequired = 0, skillPoints = 0, 
 	buildup = 0, delay = 0, duration = 10000, cooldown = 0, 
@@ -87,13 +87,13 @@ public class WaterWalk extends Skill implements Listener {
 			ArrayList<Material> materials = new ArrayList<Material>();
 			if (material == null) {
 				material = "";
-				materials.add(null);
-				materials.add(Material.AIR);
-			} else {
-				if (material.isEmpty()) {
-					materials.add(null);
-					materials.add(Material.AIR);
-				}
+//				materials.add(null);
+//				materials.add(Material.AIR);
+//			} else {
+//				if (material.isEmpty()) {
+//					materials.add(null);
+//					materials.add(Material.AIR);
+//				}
 			}
 			String[] list = material.split("\\s*,\\s*");
 			for (String s : list) {
@@ -114,8 +114,8 @@ public class WaterWalk extends Skill implements Listener {
 				lq.logSevere(newmaterial + " is not a valid material for " + data.name);
 			}
 			
-			// start on block bellow feed
-			Location l = event.getTo().add(0, -1, 0);
+			// start on block bellow feet
+			Location l = event.getTo().clone().add(0, -1, 0);
 
 			// making this bigger would increse the radius (well square size)
 			int range =1;
