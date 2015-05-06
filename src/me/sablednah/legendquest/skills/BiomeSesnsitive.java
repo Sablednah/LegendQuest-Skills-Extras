@@ -4,17 +4,19 @@ import java.util.ArrayList;
 
 import me.sablednah.legendquest.events.AbilityCheckEvent;
 import me.sablednah.legendquest.events.SkillTick;
+import me.sablednah.legendquest.events.SpeedCheckEvent;
 
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 @SkillManifest(name = "BiomeSensitive", type = SkillType.PASSIVE, author = "SableDnah", version = 1.0D, 
 description = "Multiple effects dependent on biome type", 
 consumes = "", manaCost = 0, levelRequired = 0, skillPoints = 0, 
 buildup = 0, delay = 0, duration = 0, cooldown = 0, 
-dblvarnames = { "regenerate", "damage" }, dblvarvalues = { 1.0,1.0 }, 
+dblvarnames = { "regenerate", "damage","harmspeed","healspeed" }, dblvarvalues = { 1.0,1.0,0.0,0.0 }, 
 intvarnames = { "regeninterval","damageinterval","healbonus","harmpenalty" }, 
 intvarvalues = { 5, 5, 1, 1 }, 
 strvarnames = { "message", "harmfullbiomes", "healingbiomes" }, strvarvalues = { "Tuning to nature...","HELL","FLOWER_FOREST" })
@@ -160,6 +162,71 @@ public class BiomeSesnsitive extends Skill implements Listener {
 			if (heallist.contains(b)) {
 				event.addBonus(healbonus);
 			}
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void speedCheck(SpeedCheckEvent event){
+
+		if (!validSkillUser(event.getPC())) {
+			return;
+		}
+
+		Player p = event.getPC().getPlayer();
+		if (p == null) {
+			return;
+		}
+
+		// load skill options
+		SkillDataStore data = this.getPlayerSkillData(event.getPC());
+		SkillPhase phase = data.checkPhase();
+		
+		if (phase.equals(SkillPhase.ACTIVE) || data.type.equals(SkillType.PASSIVE)) {
+			Biome b = p.getLocation().getBlock().getBiome();
+			
+			double boost = ((Double) data.vars.get("healspeed"));
+			double slow = ((Double) data.vars.get("harmspeed"));
+	
+			String[] list =null; 
+					
+			String harmfullbiomes = ((String) data.vars.get("harmfullbiomes"));
+			ArrayList<Biome> harmlist = new ArrayList<Biome>();
+			list = harmfullbiomes.split("\\s*,\\s*");
+			for (String s : list) {
+				try {
+					harmlist.add(Biome.valueOf(s));
+				} catch (IllegalArgumentException  e) {
+					lq.logSevere(s + " is not a valid biome type in skill " + data.name);
+				}
+			}
+	
+			String healingbiomes = ((String) data.vars.get("healingbiomes"));
+			ArrayList<Biome> heallist = new ArrayList<Biome>();
+			list = healingbiomes.split("\\s*,\\s*");
+			
+			for (String s : list) {
+				try {
+					heallist.add(Biome.valueOf(s));
+				} catch (IllegalArgumentException  e) {
+					lq.logSevere(s + " is not a valid biome type in skill " + data.name);
+				}
+			}
+			
+			double speed = event.getSpeed();
+			if (slow!=0.0D) {
+				if (harmlist.contains(b)) { // dark
+					speed -= slow;
+				}
+			}
+			if (boost!=0.0D) {
+				if (heallist.contains(b)) { // dark
+					speed += boost;
+				}
+			}
+			if (speed<0.05D) {
+				speed = 0.05D;
+			}
+			event.setSpeed(speed);
 		}
 	}
 }
